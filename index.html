@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Certification Prep Course - Main Index</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .course-title { font-size: 2.5rem; font-weight: 700; color: #0369a1; } /* sky-700 */
+        .class-link-card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e5e7eb; /* gray-200 */
+        }
+        .class-link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+        .class-number {
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            border-radius: 9999px; /* pill shape */
+            font-weight: 600;
+            width: 3rem; /* 48px */
+            height: 3rem; /* 48px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem; /* 20px */
+            margin-right: 1rem; /* 16px */
+        }
+        .class-topic {
+            font-size: 1.125rem; /* 18px */
+            font-weight: 600;
+            color: #075985; /* sky-800 */
+        }
+        .class-focus {
+            font-size: 0.875rem; /* 14px */
+            color: #475569; /* slate-600 */
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+
+    <div class="max-w-3xl w-full space-y-10 text-center">
+        <img src="https://placehold.co/150x80/0ea5e9/ffffff?text=SnowPro&font=inter" alt="Course Logo" class="mx-auto h-20 w-auto rounded-lg mb-6" onerror="this.onerror=null; this.src='https://placehold.co/150x80/cccccc/333333?text=Logo+Error&font=inter';" />
+        <h1 class="course-title">SnowPro Certification Prep Course</h1>
+        <p class="mt-4 text-lg text-slate-600">
+            Welcome! Select a class below to access the interactive study guide.
+        </p>
+    </div>
+
+    <div class="mt-12 max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+        <a href="class1/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">1</div>
+                <div>
+                    <h2 class="class-topic">Architecture & Ecosystem Deep Dive 🏛️</h2>
+                    <p class="class-focus">Core concepts, Virtual Warehouses, DB Objects, Monitoring, Editions.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="class2/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">2</div>
+                <div>
+                    <h2 class="class-topic">Data Loading & Unloading Mastery 🚚</h2>
+                    <p class="class-focus">File Formats, Stages, COPY Command, Snowpipe, Best Practices.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="class3/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">3</div>
+                <div>
+                    <h2 class="class-topic">Performance Optimization & Query Tuning ⚙️</h2>
+                    <p class="class-focus">Query Profile, Caching, Clustering, Materialized Views, Search Optimization.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="class4/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">4</div>
+                <div>
+                    <h2 class="class-topic">Data Sharing & Data Governance 🤝🔒</h2>
+                    <p class="class-focus">Secure Sharing, Reader Accounts, RBAC, Masking, Row Access, Policies.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="class5/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">5</div>
+                <div>
+                    <h2 class="class-topic">Semi-Structured Data, Time Travel & Fail-safe 📄⏳</h2>
+                    <p class="class-focus">VARIANT, FLATTEN, Time Travel, Fail-safe, Zero-Copy Cloning.</p>
+                </div>
+            </div>
+        </a>
+
+        <a href="class6/index.html" class="class-link-card block p-6">
+            <div class="flex items-center">
+                <div class="class-number">6</div>
+                <div>
+                    <h2 class="class-topic">Account Management, Security & Exam Strategy 🔑🎯</h2>
+                    <p class="class-focus">Resource Monitors, User/Role Mgmt, Auth, Network Policies, Connectors, Exam Tips.</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <footer class="mt-16 text-center text-sm text-slate-500">
+        <p>&copy; <span id="currentYear"></span> Revature - SnowPro Certification Preparation. All rights reserved.</p>
+        <p>Designed to help you succeed!</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+
+</body>
+</html>

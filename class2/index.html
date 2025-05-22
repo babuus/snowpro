@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Cert Prep: Class 2 - Data Loading & Unloading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices: 
+        - File Formats: Goal: Inform. Method: Clickable cards for each format. Interaction: Click to see details/gotchas. Lib: HTML/CSS/JS.
+        - Stages: Goal: Compare. Method: Tabbed content for Internal vs. External. Interaction: Click tab. Lib: HTML/CSS/JS.
+        - COPY Command: Goal: Detail options. Method: List with toggleable details for key options. Lib: HTML/CSS/JS.
+        - Snowpipe/Streaming: Goal: Differentiate. Method: Tabbed or side-by-side cards. Interaction: Click/toggle. Lib: HTML/CSS/JS.
+        - Best Practices: Goal: Summarize. Method: Categorized list. Lib: HTML/CSS/JS.
+        - Footer: Static content.
+        - No charts needed; focus on interactive text. All AI features removed.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: #0369a1; } /* sky-700 */
+        .subsection-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #075985; } /* sky-800 */
+        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #0284c7; margin-bottom: 0.75rem; } /* sky-600 */
+        .exam-tip { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin-top: 1rem; border-radius: 0.25rem; } /* sky-100 border-sky-500 */
+        .exam-tip p { margin-bottom: 0.25rem; }
+        .interactive-tab { cursor: pointer; padding: 0.5rem 1rem; border-radius: 0.375rem; transition: background-color 0.3s; }
+        .interactive-tab.active { background-color: #0ea5e9; color: white; } /* sky-500 */
+        .interactive-tab:not(.active):hover { background-color: #e0f2fe; } /* sky-100 */
+        .details-content { display: none; margin-top: 0.75rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.375rem; } /* slate-50 */
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .content-section { padding-top: 4.5rem; margin-top: -4.5rem; } /* Offset for fixed navbar */
+        .clickable-item { cursor: pointer; padding: 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out; }
+        .clickable-item:hover { background-color: #e0f2fe; } /* sky-100 */
+        .clickable-item.active-item { background-color: #bae6fd; } /* sky-200 */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-sky-700">SnowPro Prep: Class 2</a>
+            <div class="space-x-2 md:space-x-4 text-sm md:text-base">
+                <a href="#file-formats" class="nav-link text-slate-700">Formats</a>
+                <a href="#stages" class="nav-link text-slate-700">Stages</a>
+                <a href="#copy-command" class="nav-link text-slate-700">COPY</a>
+                <a href="#snowpipe" class="nav-link text-slate-700">Snowpipe</a>
+                <a href="#best-practices" class="nav-link text-slate-700">Practices</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8 pt-20">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-700">Data Loading & Unloading Mastery 🚚</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Guide for SnowPro Certification - Class 2</p>
+        </header>
+
+        <section id="introduction-class2" class="mb-12 card">
+             <h2 class="section-title">Welcome to Class 2!</h2>
+             <p class="mb-4 text-slate-700">This session focuses on advanced data movement strategies and best practices within Snowflake. We'll cover everything from file formats and stages to the powerful COPY command and automated ingestion with Snowpipe.</p>
+             <p class="font-semibold text-slate-700">Today's Focus:</p>
+             <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600">
+                <li>Supported File Formats & Data Types: Quick review and potential gotchas.</li>
+                <li>Stages (Internal vs. External): Best practices, security considerations.</li>
+                <li>COPY Command: Key options, transformations during load.</li>
+                <li>Snowpipe & Snowpipe Streaming: Use cases, error handling, and monitoring.</li>
+                <li>Best Practices for Data Loading/Unloading: Performance, cost optimization.</li>
+             </ul>
+             <p class="mt-4 font-semibold text-sky-600">Let's master how data gets in and out of Snowflake!</p>
+        </section>
+
+        <section id="file-formats" class="content-section mb-12">
+            <h2 class="section-title">Supported File Formats & Data Types</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake supports a variety of file formats for loading and unloading data. Understanding their characteristics and potential gotchas is crucial.</p>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="p-4 border rounded-md clickable-item" data-format="CSV">
+                        <h4 class="font-semibold text-sky-700">CSV (Comma Separated Values)</h4>
+                        <p class="text-sm text-slate-600">Common, simple, text-based.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Delimiter issues, escaping characters, header rows, encoding (UTF-8 recommended).</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-format="JSON">
+                        <h4 class="font-semibold text-sky-700">JSON (JavaScript Object Notation)</h4>
+                        <p class="text-sm text-slate-600">Semi-structured, good for nested data.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Parsing complex structures, variants for arrays/objects, `STRIP_OUTER_ARRAY`.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-format="Parquet">
+                        <h4 class="font-semibold text-sky-700">Parquet</h4>
+                        <p class="text-sm text-slate-600">Columnar, efficient for analytics.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Schema evolution, data type mapping, predicate pushdown benefits.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-format="ORC">
+                        <h4 class="font-semibold text-sky-700">ORC (Optimized Row Columnar)</h4>
+                        <p class="text-sm text-slate-600">Columnar, similar to Parquet.</p>
+                         <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Less common than Parquet in some ecosystems, but highly performant.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-format="AVRO">
+                        <h4 class="font-semibold text-sky-700">AVRO</h4>
+                        <p class="text-sm text-slate-600">Row-based, schema evolution support.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Requires schema definition, good for streaming data.</p>
+                        </div>
+                    </div>
+                     <div class="p-4 border rounded-md clickable-item" data-format="XML">
+                        <h4 class="font-semibold text-sky-700">XML</h4>
+                        <p class="text-sm text-slate-600">Tag-based, complex structures.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>Gotchas:</strong> Parsing can be complex, often requires transformations, `STRIP_OUTER_ELEMENT`.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-4 text-slate-700"><strong>Data Types:</strong> Snowflake attempts to convert data types during loading, but explicit casting or handling `NULL_IF` can be necessary for problematic values.</p>
+                 <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Know which formats are columnar (Parquet, ORC) and their benefits for query performance post-load. Understand common `FILE_FORMAT` options for CSV and JSON.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="stages" class="content-section mb-12">
+            <h2 class="section-title">Stages (Internal vs. External)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Stages are locations where data files are stored for loading into or unloading from Snowflake tables.</p>
+                <div class="flex space-x-2 mb-4 border-b border-slate-200">
+                    <button data-tab-content-id="internal-stages" class="interactive-tab active">Internal Stages</button>
+                    <button data-tab-content-id="external-stages" class="interactive-tab">External Stages</button>
+                </div>
+                <div id="internal-stages" class="tab-content-stages">
+                    <h3 class="subsection-title text-sky-700">Internal Stages</h3>
+                    <p class="text-slate-600">Store data files directly within Snowflake. Managed by Snowflake.</p>
+                    <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600 mt-2">
+                        <li><strong>Types:</strong> User (<code>@~</code>), Table (<code>@%table_name</code>), Named Internal (<code>@my_stage</code>).</li>
+                        <li><strong>Security:</strong> Access controlled by Snowflake roles and privileges. Data is encrypted by Snowflake.</li>
+                        <li><strong>Use Cases:</strong> Ad-hoc loading, temporary storage, when you don't want to manage external cloud storage.</li>
+                        <li><strong>Commands:</strong> `PUT` to upload files, `LIST` to view, `REMOVE` to delete.</li>
+                    </ul>
+                </div>
+                <div id="external-stages" class="tab-content-stages" style="display: none;">
+                    <h3 class="subsection-title text-sky-700">External Stages</h3>
+                    <p class="text-slate-600">Reference data files stored in external cloud storage (AWS S3, Azure Blob Storage, GCP Cloud Storage).</p>
+                    <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600 mt-2">
+                        <li><strong>Security:</strong> Requires credentials (IAM roles, SAS tokens, storage integrations) to access the external location. Data encryption managed by the cloud provider (though Snowflake supports client-side encryption).</li>
+                        <li><strong>Use Cases:</strong> Existing data lakes, frequent data exchange with external systems, large volumes of data.</li>
+                        <li><strong>Configuration:</strong> `CREATE STAGE ... URL='s3://bucket/path/' CREDENTIALS=(...)` or `STORAGE_INTEGRATION = ...`.</li>
+                        <li><strong>Best Practice:</strong> Use Storage Integrations for enhanced security (avoids embedding credentials in stage definition).</li>
+                    </ul>
+                </div>
+                <div class="exam-tip mt-4">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand when to use Internal vs. External stages. For External Stages, know the benefits of Storage Integrations over embedded credentials.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="copy-command" class="content-section mb-12">
+            <h2 class="section-title">COPY Command</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">The `COPY INTO &lt;table&gt;` command is the primary way to load data from staged files into Snowflake tables. It offers numerous options for flexibility and control.</p>
+                <h3 class="subsection-title">Key COPY Options:</h3>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-copy-option="on_error">
+                        <strong>ON_ERROR:</strong> Defines behavior when errors are encountered during loading (e.g., `CONTINUE`, `SKIP_FILE`, `ABORT_STATEMENT`).
+                        <div class="details-content text-sm"><p>Example: `ON_ERROR = 'SKIP_FILE_5%'` (skip file if more than 5% of rows have errors).</p></div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-copy-option="validation_mode">
+                        <strong>VALIDATION_MODE:</strong> Validates data files without loading (e.g., `RETURN_ERRORS`, `RETURN_ALL_ERRORS`). Useful for pre-flight checks.
+                        <div class="details-content text-sm"><p>Example: `VALIDATION_MODE = RETURN_ERRORS`.</p></div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-copy-option="match_by_column_name">
+                        <strong>MATCH_BY_COLUMN_NAME:</strong> Loads data by matching column names in files to table column names (case-insensitive by default, can be `CASE_SENSITIVE`).
+                        <div class="details-content text-sm"><p>Alternative to relying on column order. Requires `FILE_FORMAT` options like `PARSE_HEADER = TRUE` for CSV.</p></div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-copy-option="transformations">
+                        <strong>Transformations during Load:</strong> Use a `SELECT` statement from staged files to transform data (e.g., casting, string functions, reordering columns, referencing metadata columns like `METADATA$FILENAME`).
+                        <div class="details-content text-sm"><p>Example: `COPY INTO my_table FROM (SELECT $1, $2::VARCHAR, METADATA$FILENAME FROM @my_stage/data.csv) ...`</p></div>
+                    </li>
+                     <li class="clickable-item" data-copy-option="file_format_options">
+                        <strong>FILE_FORMAT (inline or named):</strong> Specifies format-specific options (e.g., `TYPE = CSV FIELD_DELIMITER = ',' SKIP_HEADER = 1` or `TYPE = JSON STRIP_OUTER_ARRAY = TRUE`).
+                        <div class="details-content text-sm"><p>Can be defined inline or by referencing a named file format object.</p></div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Be very familiar with `ON_ERROR` options. Understand how `MATCH_BY_COLUMN_NAME` works and its prerequisites. Know how to perform basic transformations during load.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="snowpipe" class="content-section mb-12">
+            <h2 class="section-title">Snowpipe & Snowpipe Streaming</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowpipe enables automated, continuous data loading from external stages as new files arrive. Snowpipe Streaming offers low-latency ingestion from Kafka or custom apps.</p>
+                 <div class="flex space-x-2 mb-4 border-b border-slate-200">
+                    <button data-tab-content-id="snowpipe-batch" class="interactive-tab active">Snowpipe (Micro-batch)</button>
+                    <button data-tab-content-id="snowpipe-streaming" class="interactive-tab">Snowpipe Streaming</button>
+                </div>
+
+                <div id="snowpipe-batch" class="tab-content-snowpipe">
+                    <h3 class="subsection-title text-sky-700">Snowpipe (Micro-batch)</h3>
+                    <p class="text-slate-600">Event-driven, serverless data ingestion. Loads data in micro-batches from files arriving in an external stage (S3, Azure Blob, GCP CS).</p>
+                    <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600 mt-2">
+                        <li><strong>Use Cases:</strong> Continuous ingestion of small, frequent files; log files, IoT data.</li>
+                        <li><strong>Mechanism:</strong> Uses event notifications (e.g., S3 SQS) or `AUTO_INGEST=TRUE` on the pipe definition.</li>
+                        <li><strong>Error Handling:</strong> `COPY_HISTORY` view, `SYSTEM$PIPE_STATUS`, `VALIDATE_PIPE_LOAD`. Errors are typically logged, and problematic files might be skipped based on `COPY` options in the pipe definition.</li>
+                        <li><strong>Monitoring:</strong> `SNOWFLAKE.ACCOUNT_USAGE.PIPE_USAGE_HISTORY`, `SYSTEM$PIPE_STATUS`.</li>
+                        <li><strong>Cost:</strong> Billed based on compute resources used for loading and a per-file overhead.</li>
+                    </ul>
+                </div>
+                <div id="snowpipe-streaming" class="tab-content-snowpipe" style="display:none;">
+                    <h3 class="subsection-title text-sky-700">Snowpipe Streaming</h3>
+                    <p class="text-slate-600">Enables writing rows of data directly into Snowflake tables without requiring files in a stage. Offers lower latency than micro-batch Snowpipe.</p>
+                     <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600 mt-2">
+                        <li><strong>Use Cases:</strong> Real-time or near real-time data streams from applications, Kafka connectors (Snowflake Kafka Connector uses this).</li>
+                        <li><strong>Mechanism:</strong> Uses Snowflake Ingest SDK or Kafka Connector to send rows over channels to target tables.</li>
+                        <li><strong>Error Handling:</strong> SDK provides mechanisms for handling errors and retries. Check Kafka Connector logs.</li>
+                        <li><strong>Monitoring:</strong> `SNOWFLAKE.ACCOUNT_USAGE.SNOWPIPE_STREAMING_CLIENT_HISTORY`, `SNOWFLAKE.ACCOUNT_USAGE.SNOWPIPE_STREAMING_FILE_MIGRATION_HISTORY`.</li>
+                        <li><strong>Cost:</strong> Based on ingested data volume and compute for migration.</li>
+                    </ul>
+                </div>
+                <div class="exam-tip mt-4">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Know the key differences between Snowpipe (micro-batch) and Snowpipe Streaming, especially their primary use cases and how data is ingested (files vs. rows via SDK/Kafka).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="best-practices" class="content-section mb-12">
+            <h2 class="section-title">Best Practices for Data Loading/Unloading</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Optimizing data movement involves considering performance, cost, and manageability.</p>
+                <ul class="list-disc list-inside ml-4 space-y-2 text-slate-600">
+                    <li><strong>File Sizing:</strong> Aim for compressed file sizes between 10MB and 250MB (ideally 100-250MB) for optimal parallelism during load. Avoid too many tiny files or very large monolithic files.</li>
+                    <li><strong>File Splitting:</strong> Split large files into smaller, evenly sized chunks before loading.</li>
+                    <li><strong>Warehouse Sizing for Loading:</strong> Use a dedicated, adequately sized warehouse for large batch loads. Monitor `QUERY_HISTORY` for load performance and adjust VWH size if needed. Suspend after use.</li>
+                    <li><strong>Data Validation:</strong> Use `VALIDATION_MODE` before actual loading or load into a staging table first for complex validation.</li>
+                    <li><strong>Purging Loaded Files:</strong> Regularly purge successfully loaded files from stages (especially internal stages) to manage storage and avoid reprocessing, unless needed for archival. `PURGE = TRUE` in `COPY` command can help.</li>
+                    <li><strong>Unloading Data (`COPY INTO @stage`):</strong> Use `SINGLE = FALSE` (default) for parallel unloading into multiple files for better performance. Use `MAX_FILE_SIZE` to control output file sizes.</li>
+                    <li><strong>Monitoring Loads:</strong> Regularly check `LOAD_HISTORY` (Information Schema) or `COPY_HISTORY` (Account Usage) for status, errors, and rows loaded.</li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>File sizing and splitting are common topics. Understand how warehouse size impacts load performance and cost for batch loads.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-8 border-t border-slate-200">
+            <p class="text-slate-600">&copy; 2025 Babu/Revature. Good luck with your SnowPro studies!</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Clickable items to show details
+            function setupClickableItems(containerSelector, itemSelector, detailsSelector) {
+                document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(item => {
+                    const details = item.querySelector(detailsSelector);
+                    if (details) {
+                        details.style.display = 'none'; // Initially hide
+                        item.addEventListener('click', (e) => {
+                            // Toggle active class for visual feedback
+                            const currentActive = document.querySelector(`${containerSelector} ${itemSelector}.active-item`);
+                            if (currentActive && currentActive !== item) {
+                                currentActive.classList.remove('active-item');
+                                const currentDetails = currentActive.querySelector(detailsSelector);
+                                if (currentDetails) currentDetails.style.display = 'none';
+                            }
+                            
+                            const isHidden = details.style.display === 'none' || details.style.display === '';
+                            details.style.display = isHidden ? 'block' : 'none';
+                            if (isHidden) {
+                                item.classList.add('active-item');
+                            } else {
+                                item.classList.remove('active-item');
+                            }
+                        });
+                    }
+                });
+            }
+            setupClickableItems('#file-formats', '.clickable-item', '.details-content');
+            setupClickableItems('#copy-command ul', '.clickable-item', '.details-content');
+
+
+            // Tab functionality (for Stages and Snowpipe sections)
+            function setupTabs(navSelector, contentParentSelector, defaultTabClass) {
+                const tabs = document.querySelectorAll(`${navSelector} .interactive-tab`);
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const targetContentId = tab.dataset.tabContentId;
+                        document.querySelectorAll(`${contentParentSelector} > div`).forEach(content => {
+                            if (content.id === targetContentId) {
+                                content.style.display = 'block';
+                            } else {
+                                content.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+                if (defaultTabClass) {
+                    const defaultActiveTab = document.querySelector(`${navSelector} .interactive-tab.${defaultTabClass}`);
+                    if (defaultActiveTab) defaultActiveTab.click();
+                } else if (tabs.length > 0) {
+                    tabs[0].click();
+                }
+            }
+            setupTabs('#stages .flex', '#stages .card', 'active'); 
+            setupTabs('#snowpipe .flex', '#snowpipe .card', 'active');
+        });
+    </script>
+</body>
+</html>

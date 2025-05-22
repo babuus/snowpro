@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Cert Prep: Class 3 - Performance & Tuning</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices: 
+        - Query Profile: Goal: Understand analysis. Method: Clickable items for bottlenecks. Lib: HTML/CSS/JS.
+        - Caching Layers: Goal: Differentiate. Method: Clickable cards for each cache type. Lib: HTML/CSS/JS.
+        - Clustering: Goal: Explain impact. Method: Clickable items for concepts like choosing keys, monitoring. Lib: HTML/CSS/JS.
+        - Materialized Views: Goal: Detail use cases. Method: Clickable items for use cases, maintenance. Lib: HTML/CSS/JS.
+        - Search Optimization: Goal: Explain usage. Method: Clickable items for how it works, when to use. Lib: HTML/CSS/JS.
+        - Footer: Static content.
+        - No charts needed; focus on interactive text. All AI features removed.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: #0369a1; } /* sky-700 */
+        .subsection-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #075985; } /* sky-800 */
+        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #0284c7; margin-bottom: 0.75rem; } /* sky-600 */
+        .exam-tip { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin-top: 1rem; border-radius: 0.25rem; } /* sky-100 border-sky-500 */
+        .exam-tip p { margin-bottom: 0.25rem; }
+        .details-content { display: none; margin-top: 0.75rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.375rem; } /* slate-50 */
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .content-section { padding-top: 4.5rem; margin-top: -4.5rem; } /* Offset for fixed navbar */
+        .clickable-item { cursor: pointer; padding: 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out; }
+        .clickable-item:hover { background-color: #e0f2fe; } /* sky-100 */
+        .clickable-item.active-item { background-color: #bae6fd; } /* sky-200 */
+        .code-snippet { background-color: #eef2ff; color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; } /* indigo-100, indigo-700 */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-sky-700">SnowPro Prep: Class 3</a>
+            <div class="space-x-1 sm:space-x-2 md:space-x-4 text-xs sm:text-sm md:text-base">
+                <a href="#query-profile" class="nav-link text-slate-700">Profile</a>
+                <a href="#caching" class="nav-link text-slate-700">Caching</a>
+                <a href="#clustering" class="nav-link text-slate-700">Clustering</a>
+                <a href="#materialized-views" class="nav-link text-slate-700">MVs</a>
+                <a href="#search-optimization" class="nav-link text-slate-700">SOS</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8 pt-20">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-700">Performance Optimization & Query Tuning ⚙️</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Guide for SnowPro Certification - Class 3</p>
+        </header>
+
+        <section id="introduction-class3" class="mb-12 card">
+             <h2 class="section-title">Welcome to Class 3!</h2>
+             <p class="mb-4 text-slate-700">This session is dedicated to techniques for analyzing and improving query performance in Snowflake. We'll explore tools like the Query Profile, understand Snowflake's caching mechanisms, and delve into features like clustering, materialized views, and the search optimization service.</p>
+             <p class="font-semibold text-slate-700">Today's Focus:</p>
+             <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600">
+                <li>Query Profile Analysis: Identifying bottlenecks.</li>
+                <li>Caching Layers: Results, local disk, and warehouse cache.</li>
+                <li>Clustering Keys & Micro-partitions: Impact and best practices.</li>
+                <li>Materialized Views: Use cases, maintenance, and impact.</li>
+                <li>Search Optimization Service: When and how to use it.</li>
+             </ul>
+             <p class="mt-4 font-semibold text-sky-600">Let's learn how to make your Snowflake queries fly!</p>
+        </section>
+
+        <section id="query-profile" class="content-section mb-12">
+            <h2 class="section-title">Query Profile Analysis</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">The Query Profile in Snowflake is an essential tool for understanding query execution and identifying performance bottlenecks. You can access it via the History page in the Snowsight UI.</p>
+                <h3 class="subsection-title">Key Bottlenecks to Identify:</h3>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-qp-item="spilling">
+                        <strong>Disk Spilling:</strong> Occurs when an operation needs more memory than available on a warehouse worker node, forcing data to be written to local disk (or remote storage if local disk is also full).
+                        <div class="details-content text-sm">
+                            <p><strong>Impact:</strong> Significantly slows down query performance due to slower disk I/O.</p>
+                            <p><strong>Common Causes:</strong> Large sorts, joins, aggregations on insufficient warehouse sizes, or "exploding" joins.</p>
+                            <p><strong>Solution:</strong> Increase warehouse size, optimize query (e.g., filter earlier, better join conditions), or use clustering for better data pruning.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-qp-item="queueing">
+                        <strong>Queueing:</strong> Queries may wait in a queue before execution.
+                        <div class="details-content text-sm">
+                            <p><strong>Types:</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Warehouse Queueing:</strong> Warehouse is overloaded with concurrent queries. Solution: Increase warehouse size (for complex queries) or use multi-cluster warehouses (for high concurrency).</li>
+                                <li><strong>Provisioning Queueing:</strong> Warehouse is starting/resuming. Usually brief.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-qp-item="scans">
+                        <strong>Inefficient Table Scans:</strong> Scanning too many micro-partitions for the data needed.
+                        <div class="details-content text-sm">
+                            <p><strong>Impact:</strong> More I/O, longer query times.</p>
+                            <p><strong>Indication:</strong> High percentage of "Bytes Scanned" from remote storage in Query Profile.</p>
+                            <p><strong>Solution:</strong> Define clustering keys on large tables if frequently filtered on specific columns, ensure predicates are "sargable" (can leverage pruning).</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-qp-item="joins">
+                        <strong>Inefficient Joins:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Cartesian Joins (Exploding Joins):</strong> Join conditions are missing or incorrect, leading to a massive number of rows generated. Identify by looking at the number of rows flowing between join operators.</p>
+                            <p><strong>Skewed Joins:</strong> Data skew in join keys can cause some worker nodes to do disproportionately more work.</p>
+                            <p><strong>Solution:</strong> Review join logic, ensure correct join keys, filter data before joins if possible.</p>
+                        </div>
+                    </li>
+                </ul>
+                 <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Disk spilling is a very common indicator of performance issues. Understand its causes and remedies. Be able to interpret basic operator statistics in the Query Profile.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="caching" class="content-section mb-12">
+            <h2 class="section-title">Caching Layers</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake utilizes multiple layers of caching to accelerate query performance and reduce redundant computation and I/O.</p>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="p-4 border rounded-md clickable-item" data-cache-item="results">
+                        <h4 class="font-semibold text-sky-700">1. Results Cache</h4>
+                        <p class="text-sm text-slate-600">Stores results of previously executed queries.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>How it works:</strong> If an identical query is re-executed (by any user on the account) and the underlying data hasn't changed, Snowflake returns results directly from this cache.</p>
+                            <p><strong>Duration:</strong> Typically 24 hours, but invalidated if underlying data changes.</p>
+                            <p><strong>Check:</strong> Query Profile will show "Query result reuse".</p>
+                            <p><strong>Cost:</strong> No compute cost (warehouse not used).</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-cache-item="local">
+                        <h4 class="font-semibold text-sky-700">2. Local Disk Cache (Warehouse Cache)</h4>
+                        <p class="text-sm text-slate-600">Caches table data on the SSDs of active virtual warehouse nodes.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>How it works:</strong> When a query needs data, it's fetched from remote storage (S3, Azure Blob, etc.) and cached on the warehouse's local SSDs.</p>
+                            <p><strong>Benefit:</strong> Subsequent queries on the same warehouse requiring the same data can read from faster local disk instead of remote storage.</p>
+                            <p><strong>Lifecycle:</strong> Cleared when the warehouse is suspended.</p>
+                        </div>
+                    </div>
+                    <div class="p-4 border rounded-md clickable-item" data-cache-item="metadata">
+                        <h4 class="font-semibold text-sky-700">3. Metadata Cache (Cloud Services)</h4>
+                        <p class="text-sm text-slate-600">Caches metadata about tables and micro-partitions.</p>
+                        <div class="details-content mt-2 text-sm">
+                            <p><strong>How it works:</strong> The Cloud Services layer maintains extensive metadata, including information about micro-partitions (min/max values, distinct values, etc.). This is heavily cached.</p>
+                            <p><strong>Benefit:</strong> Enables extremely efficient micro-partition pruning, significantly reducing the amount of data that needs to be scanned from storage.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand the conditions for using the Results Cache (identical query, unchanged data). Know that the Local Disk Cache is tied to a running warehouse.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="clustering" class="content-section mb-12">
+            <h2 class="section-title">Clustering Keys & Micro-partitions</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake stores data in micro-partitions. Effective clustering co-locates related data within these micro-partitions, significantly improving query performance by enabling better data pruning.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-cluster-item="micropartitions">
+                        <strong>Micro-partitions Recap:</strong>
+                        <div class="details-content text-sm">
+                            <p>Small (50-500MB uncompressed), immutable, columnar storage units. Snowflake automatically tracks metadata (min/max values, distinct counts) for each column within each micro-partition.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-cluster-item="naturalclustering">
+                        <strong>Natural Clustering:</strong>
+                        <div class="details-content text-sm">
+                            <p>Data is often naturally clustered as it's loaded, especially if sorted by date or a sequence ID. Snowflake leverages this.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-cluster-item="clusteringkeys">
+                        <strong>Clustering Keys (Explicit):</strong>
+                        <div class="details-content text-sm">
+                            <p>You can define clustering keys on a table using <code class="code-snippet">ALTER TABLE ... CLUSTER BY (col1, col2)</code>. This instructs Snowflake to attempt to co-locate rows with similar values in the specified columns within the same or nearby micro-partitions.</p>
+                            <p><strong>Impact:</strong> Improves pruning for queries filtering or joining on these keys.</p>
+                            <p><strong>Cost:</strong> Initial clustering and automatic reclustering (background process) consume credits.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-cluster-item="choosingkeys">
+                        <strong>Choosing Good Clustering Keys:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Columns frequently used in range predicates (<code class="code-snippet">&lt;, &gt;, BETWEEN</code>) or equality filters in <code class="code-snippet">WHERE</code> clauses of common queries on large tables.</li>
+                                <li>Columns used in join predicates on large tables.</li>
+                                <li>Cardinality: Lower cardinality columns (few distinct values) are generally NOT good primary clustering keys unless they group data effectively for subsequent higher-cardinality keys. Aim for keys that significantly reduce the data scanned.</li>
+                                <li>Order matters for multi-column keys.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-cluster-item="monitoringclustering">
+                        <strong>Monitoring Clustering:</strong>
+                        <div class="details-content text-sm">
+                            <p>Use <code class="code-snippet">SYSTEM$CLUSTERING_INFORMATION(table_name)</code> to get details about clustering depth and quality.</p>
+                            <p><code class="code-snippet">SYSTEM$CLUSTERING_DEPTH(table_name)</code> provides an average depth; lower is generally better.</p>
+                            <p>The <code class="code-snippet">clustering_depth</code> column in <code class="code-snippet">SNOWFLAKE.ACCOUNT_USAGE.TABLES</code> shows historical depth.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand that clustering is most beneficial for very large tables (terabytes). Know when to define a clustering key and how to choose appropriate columns. Automatic Clustering maintains the clustering over time.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="materialized-views" class="content-section mb-12">
+            <h2 class="section-title">Materialized Views (MVs)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Materialized Views store pre-computed query results. Queries against MVs can be significantly faster than querying base tables, especially for complex aggregations or joins.</p>
+                 <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-mv-item="whatis">
+                        <strong>What are Materialized Views?</strong>
+                        <div class="details-content text-sm">
+                            <p>MVs store the result of their defining query. Unlike standard views (which are just stored queries), MVs store the data itself. This data is refreshed automatically by Snowflake when the underlying base table data changes.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-mv-item="usecases">
+                        <strong>Use Cases:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Queries with expensive aggregations or joins that are executed frequently.</li>
+                                <li>Improving performance for BI dashboards that hit common query patterns.</li>
+                                <li>When the underlying data changes, but not so frequently that MV maintenance costs outweigh query performance benefits.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-mv-item="maintenance">
+                        <strong>Maintenance & Cost:</strong>
+                        <div class="details-content text-sm">
+                            <p>Snowflake automatically maintains MVs in the background when base table data changes. This maintenance consumes credits.</p>
+                            <p>Storage costs also apply for the data stored by the MV.</p>
+                            <p>The query optimizer automatically considers MVs; if a query (or part of it) can be satisfied by an MV, it will try to use it.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-mv-item="considerations">
+                        <strong>Considerations/Limitations:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Not all SQL constructs are allowed in MV definitions (e.g., non-deterministic functions, outer joins on non-clustered MVs, window functions in some cases).</li>
+                                <li>Secure MVs are available to protect sensitive data.</li>
+                                <li>Over-using MVs can lead to high maintenance costs. Analyze query patterns carefully.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand the trade-off: MVs improve query performance but incur storage and maintenance (compute) costs. Know typical scenarios where MVs are beneficial.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="search-optimization" class="content-section mb-12">
+            <h2 class="section-title">Search Optimization Service (SOS)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">The Search Optimization Service aims to significantly improve the performance of selective point lookup queries on large tables.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-sos-item="whatis">
+                        <strong>What is SOS?</strong>
+                        <div class="details-content text-sm">
+                            <p>It's a table-level property that, when enabled for specific columns, builds and maintains a persistent search access path (a specialized data structure). This path allows Snowflake to quickly find rows matching equality or IN predicates on those columns without full table scans.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-sos-item="howitworks">
+                        <strong>How it Works:</strong>
+                        <div class="details-content text-sm">
+                            <p>The search access path is maintained automatically by a background service as data in the table changes. It's distinct from clustering keys but can complement them.</p>
+                            <p>Queries with predicates like <code class="code-snippet">WHERE col = 'value'</code> or <code class="code-snippet">WHERE col IN ('v1', 'v2')</code> on SOS-enabled columns can benefit.</p>
+                        </div>
+                    </li>
+                     <li class="clickable-item border-b pb-2" data-sos-item="whentouse">
+                        <strong>When to Use It:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Very large tables (hundreds of GBs or TBs).</li>
+                                <li>Frequent, highly selective point lookup queries.</li>
+                                <li>Queries where full table scans or even micro-partition pruning via clustering are still too slow for the required lookup performance.</li>
+                                <li>Supported data types for SOS columns include fixed-length types (NUMBER, DATE, STRING up to a certain length), VARIANT, GEOGRAPHY.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-sos-item="cost">
+                        <strong>Enabling, Monitoring & Cost:</strong>
+                        <div class="details-content text-sm">
+                            <p>Enable using <code class="code-snippet">ALTER TABLE ... ADD SEARCH OPTIMIZATION ON EQUALITY(col1), SUBSTRING(col2)...</code>.</p>
+                            <p>Monitor build status in <code class="code-snippet">SNOWFLAKE.ACCOUNT_USAGE.TABLES</code> (search_optimization_progress) and cost in <code class="code-snippet">SNOWFLAKE.ACCOUNT_USAGE.SEARCH_OPTIMIZATION_HISTORY</code>.</p>
+                            <p>SOS incurs storage costs for the search access path and compute costs for its initial build and ongoing maintenance.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>SOS is for specific point lookup scenarios on large tables. It's not a general-purpose indexing solution. Understand its cost implications.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-8 border-t border-slate-200">
+            <p class="text-slate-600">&copy; 2025 Babu/Revature. Good luck with your SnowPro studies!</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Clickable items to show details
+            function setupClickableItems(containerSelector, itemSelector, detailsSelector) {
+                document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(item => {
+                    const details = item.querySelector(detailsSelector);
+                    if (details) {
+                        details.style.display = 'none'; // Initially hide
+                        item.addEventListener('click', (e) => {
+                            // Toggle active class for visual feedback
+                            const currentActive = document.querySelector(`${containerSelector} ${itemSelector}.active-item`);
+                            if (currentActive && currentActive !== item) {
+                                currentActive.classList.remove('active-item');
+                                const currentDetails = currentActive.querySelector(detailsSelector);
+                                if (currentDetails) currentDetails.style.display = 'none';
+                            }
+                            
+                            const isHidden = details.style.display === 'none' || details.style.display === '';
+                            details.style.display = isHidden ? 'block' : 'none';
+                            if (isHidden) {
+                                item.classList.add('active-item');
+                            } else {
+                                item.classList.remove('active-item');
+                            }
+                        });
+                    }
+                });
+            }
+            // Apply to all sections that use this pattern
+            setupClickableItems('#query-profile ul', '.clickable-item', '.details-content');
+            setupClickableItems('#caching .grid', '.clickable-item', '.details-content');
+            setupClickableItems('#clustering ul', '.clickable-item', '.details-content');
+            setupClickableItems('#materialized-views ul', '.clickable-item', '.details-content');
+            setupClickableItems('#search-optimization ul', '.clickable-item', '.details-content');
+
+        });
+    </script>
+</body>
+</html>

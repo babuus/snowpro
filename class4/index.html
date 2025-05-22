@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Cert Prep: Class 4 - Sharing & Governance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices: 
+        - Secure Data Sharing: Goal: Explain mechanisms. Method: Clickable items for provider/consumer, direct/listing. Lib: HTML/CSS/JS.
+        - Reader Accounts: Goal: Detail purpose. Method: Clickable item for purpose/limitations. Lib: HTML/CSS/JS.
+        - Access Control: Goal: Explain RBAC. Method: Clickable items for RBAC, ownership, future grants. Lib: HTML/CSS/JS.
+        - Data Masking: Goal: Differentiate types. Method: Clickable items for dynamic/external masking. Lib: HTML/CSS/JS.
+        - Row Access Policies: Goal: Explain concept. Method: Clickable item for row access/tag-based masking. Lib: HTML/CSS/JS.
+        - Account/Session Policies: Goal: Explain purpose. Method: Clickable items for each policy type. Lib: HTML/CSS/JS.
+        - Footer: Static content.
+        - No charts needed; focus on interactive text. All AI features removed.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: #0369a1; } /* sky-700 */
+        .subsection-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #075985; } /* sky-800 */
+        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #0284c7; margin-bottom: 0.75rem; } /* sky-600 */
+        .exam-tip { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin-top: 1rem; border-radius: 0.25rem; } /* sky-100 border-sky-500 */
+        .exam-tip p { margin-bottom: 0.25rem; }
+        .details-content { display: none; margin-top: 0.75rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.375rem; } /* slate-50 */
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .content-section { padding-top: 4.5rem; margin-top: -4.5rem; } /* Offset for fixed navbar */
+        .clickable-item { cursor: pointer; padding: 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out; }
+        .clickable-item:hover { background-color: #e0f2fe; } /* sky-100 */
+        .clickable-item.active-item { background-color: #bae6fd; } /* sky-200 */
+        .code-snippet { background-color: #eef2ff; color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; } /* indigo-100, indigo-700 */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-sky-700">SnowPro Prep: Class 4</a>
+            <div class="space-x-1 sm:space-x-2 md:space-x-3 text-xs sm:text-sm md:text-base">
+                <a href="#secure-sharing" class="nav-link text-slate-700">Sharing</a>
+                <a href="#reader-accounts" class="nav-link text-slate-700">Reader Accs</a>
+                <a href="#access-control" class="nav-link text-slate-700">RBAC</a>
+                <a href="#data-masking" class="nav-link text-slate-700">Masking</a>
+                <a href="#row-access" class="nav-link text-slate-700">Row Access</a>
+                <a href="#account-policies" class="nav-link text-slate-700">Policies</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8 pt-20">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-700">Data Sharing & Data Governance 🤝🔒</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Guide for SnowPro Certification - Class 4</p>
+        </header>
+
+        <section id="introduction-class4" class="mb-12 card">
+             <h2 class="section-title">Welcome to Class 4!</h2>
+             <p class="mb-4 text-slate-700">This session explores Snowflake's powerful secure data sharing mechanisms and critical data governance features. We'll cover how data can be shared between accounts, how access is controlled, and how sensitive data can be protected.</p>
+             <p class="font-semibold text-slate-700">Today's Focus:</p>
+             <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600">
+                <li>Secure Data Sharing: Overview, providers vs. consumers, direct shares vs. listings.</li>
+                <li>Reader Accounts: Purpose and limitations.</li>
+                <li>Access Control: Role-Based Access Control (RBAC), object ownership, future grants.</li>
+                <li>Data Masking (Dynamic & External): Policies and implementation.</li>
+                <li>Row Access Policies & Tag-based Masking.</li>
+                <li>Account & Session Policies.</li>
+             </ul>
+             <p class="mt-4 font-semibold text-sky-600">Let's dive into sharing data securely and governing it effectively!</p>
+        </section>
+
+        <section id="secure-sharing" class="content-section mb-12">
+            <h2 class="section-title">Secure Data Sharing</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake's Secure Data Sharing allows accounts to share data without copying or moving it. Data is shared live from the provider's account, ensuring consumers always see the most current version.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-sharing-item="overview">
+                        <strong>Overview:</strong>
+                        <div class="details-content text-sm">
+                            <p>Data providers can share selected database objects (tables, secure views, secure UDFs) with data consumers.</p>
+                            <p>Consumers access shared data as if it were in their own account, but it remains in the provider's storage (consumers pay for compute on shared data).</p>
+                            <p>No ETL or data movement is required, reducing complexity and cost.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-sharing-item="provider-consumer">
+                        <strong>Providers vs. Consumers:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Provider:</strong> The Snowflake account that owns the data and makes it available via a share object.</p>
+                            <p><strong>Consumer:</strong> The Snowflake account (or reader account) that is granted access to the share and creates a database from it to query the data.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-sharing-item="direct-listing">
+                        <strong>Direct Shares vs. Listings:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Direct Share:</strong> Sharing data directly with specific consumer accounts. The provider manages access explicitly.</p>
+                            <p><strong>Listings (Snowflake Marketplace/Data Exchange):</strong> Providers can publish listings to make their data discoverable and accessible to a broader audience (either publicly or privately to select consumers). Consumers can request access or instantly access free/public listings.</p>
+                        </div>
+                    </li>
+                </ul>
+                 <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand that data is not copied in Secure Data Sharing. Know the roles of provider and consumer, and the difference between a direct share and a listing.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="reader-accounts" class="content-section mb-12">
+            <h2 class="section-title">Reader Accounts</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Reader accounts allow providers to share data with consumers who do not have their own Snowflake account. These are managed by the provider.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item" data-reader-item="purpose">
+                        <strong>Purpose and Limitations:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Purpose:</strong> To enable data sharing with entities that are not existing Snowflake customers. The provider creates and manages the reader account.</p>
+                            <p><strong>Functionality:</strong> Consumers using reader accounts can only query data shared with them by the provider account. They cannot perform DML operations on shared data, create their own objects (beyond what's needed to consume the share), or load their own data.</p>
+                            <p><strong>Cost:</strong> The provider account incurs all storage and compute costs associated with the reader account's usage.</p>
+                            <p><strong>Creation:</strong> Created using <code class="code-snippet">CREATE MANAGED ACCOUNT</code> (newer syntax) or via Classic Console for older reader accounts.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Remember that reader accounts are provisioned and paid for by the data provider. They are for consumption only.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="access-control" class="content-section mb-12">
+            <h2 class="section-title">Access Control</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake uses Role-Based Access Control (RBAC) as its primary mechanism for managing access to objects and actions.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-ac-item="rbac">
+                        <strong>Role-Based Access Control (RBAC):</strong>
+                        <div class="details-content text-sm">
+                            <p>Privileges are granted to roles, and roles are granted to users (or other roles, creating a hierarchy).</p>
+                            <p>Users can activate different roles within a session using <code class="code-snippet">USE ROLE &lt;role_name&gt;</code>.</p>
+                            <p>System-defined roles include <code class="code-snippet">ACCOUNTADMIN</code>, <code class="code-snippet">SYSADMIN</code>, <code class="code-snippet">SECURITYADMIN</code>, <code class="code-snippet">USERADMIN</code>, and <code class="code-snippet">PUBLIC</code>.</p>
+                            <p>Best practice: Create custom roles for specific functions/responsibilities following the principle of least privilege.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-ac-item="ownership">
+                        <strong>Object Ownership:</strong>
+                        <div class="details-content text-sm">
+                            <p>Each object is owned by a single role (the role that created it, by default). The owning role has all privileges on the object (e.g., <code class="code-snippet">OWNERSHIP</code> privilege) and can grant privileges on that object to other roles.</p>
+                            <p>The <code class="code-snippet">OWNERSHIP</code> privilege can be transferred using <code class="code-snippet">GRANT OWNERSHIP</code>.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-ac-item="future-grants">
+                        <strong>Future Grants:</strong>
+                        <div class="details-content text-sm">
+                            <p>Allows defining default privileges that will be automatically granted on new objects of a certain type created in a schema or database.</p>
+                            <p>Example: <code class="code-snippet">GRANT SELECT ON FUTURE TABLES IN SCHEMA my_schema TO ROLE analyst_role;</code></p>
+                            <p>Simplifies privilege management, especially in environments where objects are frequently created.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>RBAC is fundamental. Understand role hierarchies and the purpose of system-defined roles. Future grants are important for automating privilege assignments.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="data-masking" class="content-section mb-12">
+            <h2 class="section-title">Data Masking (Dynamic & External)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Data masking policies selectively obscure sensitive data in query results based on the user's role or other conditions, without changing the underlying stored data.</p>
+                 <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-masking-item="dynamic">
+                        <strong>Dynamic Data Masking:</strong>
+                        <div class="details-content text-sm">
+                            <p>Policies are SQL UDFs that define how data should be transformed (masked) at query time.</p>
+                            <p>A masking policy is created and then applied to one or more table/view columns.</p>
+                            <p>The policy logic can use context functions like <code class="code-snippet">CURRENT_ROLE()</code>, <code class="code-snippet">IS_ROLE_IN_SESSION()</code> to determine the masking behavior.</p>
+                            <p>Example: Show full SSN to HR_ROLE, but show 'XXX-XX-XXXX' to other roles.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-masking-item="external">
+                        <strong>External Tokenization (with Dynamic Data Masking):</strong>
+                        <div class="details-content text-sm">
+                            <p>Allows integrating Snowflake's dynamic data masking with external tokenization providers.</p>
+                            <p>Sensitive data is tokenized (replaced with a token) before being loaded into Snowflake. The masking policy calls an external function (provided by the tokenization partner) to de-tokenize data for authorized users at query time.</p>
+                            <p>This keeps the actual sensitive data outside of Snowflake if required by compliance.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Dynamic Data Masking applies at query time and doesn't alter stored data. Understand that policies are conditional based on context functions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="row-access" class="content-section mb-12">
+            <h2 class="section-title">Row Access Policies & Tag-based Masking</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Row Access Policies control which rows are visible in query results. Tag-based masking simplifies applying masking policies across many columns.</p>
+                 <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-rowaccess-item="rowpolicies">
+                        <strong>Row Access Policies:</strong>
+                        <div class="details-content text-sm">
+                            <p>Define which rows a user can see based on their role or other attributes. Policies are SQL UDFs that return TRUE if the row should be visible.</p>
+                            <p>A policy is created and then added to a table or view.</p>
+                            <p>Example: A sales representative can only see rows related to their sales region.</p>
+                            <p>Uses context functions similar to data masking policies.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-rowaccess-item="tagbased">
+                        <strong>Tag-based Masking:</strong>
+                        <div class="details-content text-sm">
+                            <p>Simplifies governance by allowing a masking policy to be applied to a tag. Then, by assigning that tag to multiple columns across different tables, the masking policy is automatically applied to all tagged columns.</p>
+                            <p>Steps:</p>
+                            <ol class="list-decimal list-inside ml-4">
+                                <li>Create a tag (e.g., <code class="code-snippet">CREATE TAG pii_level_1</code>).</li>
+                                <li>Create a masking policy.</li>
+                                <li>Associate the masking policy with the tag (e.g., <code class="code-snippet">ALTER TAG pii_level_1 SET MASKING POLICY ssn_mask</code>).</li>
+                                <li>Assign the tag to table columns (e.g., <code class="code-snippet">ALTER TABLE customers MODIFY COLUMN ssn SET TAG pii_level_1 = 'ssn_data'</code>).</li>
+                            </ol>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Row Access Policies filter rows, while Data Masking policies alter column values. Tag-based masking is a powerful way to scale governance.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="account-policies" class="content-section mb-12">
+            <h2 class="section-title">Account & Session Policies</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">These policies enforce security and behavior at the account or session level.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-acctpolicy-item="password">
+                        <strong>Password Policies:</strong>
+                        <div class="details-content text-sm">
+                            <p>Enforce password complexity, expiration, and history requirements for users authenticating directly to Snowflake.</p>
+                            <p>Set at the account level or for individual users.</p>
+                            <p>Example: <code class="code-snippet">ALTER ACCOUNT SET PASSWORD_MIN_LENGTH = 10, PASSWORD_HISTORY = 5;</code></p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-acctpolicy-item="session">
+                        <strong>Session Policies:</strong>
+                        <div class="details-content text-sm">
+                            <p>Control session-level parameters, primarily idle timeout.</p>
+                            <p>Helps manage resource usage and security by automatically logging out inactive sessions.</p>
+                            <p>Example: <code class="code-snippet">CREATE SESSION POLICY my_session_policy SESSION_IDLE_TIMEOUT_MINS = 30;</code> Then apply to account or users.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-acctpolicy-item="network">
+                        <strong>Network Policies:</strong>
+                        <div class="details-content text-sm">
+                            <p>Restrict access to your Snowflake account based on IP addresses (allow lists and block lists).</p>
+                            <p>Can be applied at the account level or to individual users.</p>
+                            <p>Enhances security by limiting where Snowflake can be accessed from.</p>
+                            <p>Example: <code class="code-snippet">CREATE NETWORK POLICY my_corp_network ALLOWED_IP_LIST = ('1.2.3.4', '5.6.7.0/24');</code></p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand the purpose of each policy type: Password (user auth), Session (idle timeout), Network (IP restriction).</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-8 border-t border-slate-200">
+            <p class="text-slate-600">&copy; 2025 Babu/Revature. Good luck with your SnowPro studies!</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Clickable items to show details
+            function setupClickableItems(containerSelector, itemSelector, detailsSelector) {
+                document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(item => {
+                    const details = item.querySelector(detailsSelector);
+                    if (details) {
+                        details.style.display = 'none'; // Initially hide
+                        item.addEventListener('click', (e) => {
+                            const currentActive = document.querySelector(`${containerSelector} ${itemSelector}.active-item`);
+                            if (currentActive && currentActive !== item) {
+                                currentActive.classList.remove('active-item');
+                                const currentDetails = currentActive.querySelector(detailsSelector);
+                                if (currentDetails) currentDetails.style.display = 'none';
+                            }
+                            
+                            const isHidden = details.style.display === 'none' || details.style.display === '';
+                            details.style.display = isHidden ? 'block' : 'none';
+                            if (isHidden) {
+                                item.classList.add('active-item');
+                            } else {
+                                item.classList.remove('active-item');
+                            }
+                        });
+                    }
+                });
+            }
+            // Apply to all sections that use this pattern
+            setupClickableItems('#secure-sharing ul', '.clickable-item', '.details-content');
+            setupClickableItems('#reader-accounts ul', '.clickable-item', '.details-content');
+            setupClickableItems('#access-control ul', '.clickable-item', '.details-content');
+            setupClickableItems('#data-masking ul', '.clickable-item', '.details-content');
+            setupClickableItems('#row-access ul', '.clickable-item', '.details-content');
+            setupClickableItems('#account-policies ul', '.clickable-item', '.details-content');
+        });
+    </script>
+</body>
+</html>

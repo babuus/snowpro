@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Cert Prep: Class 5 - Semi-Structured, Time Travel & Fail-safe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices: 
+        - Semi-Structured Data: Goal: Explain handling. Method: Clickable items for VARIANT, dot notation, FLATTEN. Lib: HTML/CSS/JS.
+        - Time Travel: Goal: Detail usage. Method: Clickable items for configuration, use cases (querying past, restoring). Lib: HTML/CSS/JS.
+        - Fail-safe: Goal: Explain purpose. Method: Clickable item for purpose/recovery concept. Lib: HTML/CSS/JS.
+        - Cloning: Goal: Detail zero-copy cloning. Method: Clickable items for cloning tables/schemas/databases, use cases. Lib: HTML/CSS/JS.
+        - Footer: Static content.
+        - No charts needed; focus on interactive text. All AI features removed.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: #0369a1; } /* sky-700 */
+        .subsection-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #075985; } /* sky-800 */
+        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #0284c7; margin-bottom: 0.75rem; } /* sky-600 */
+        .exam-tip { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin-top: 1rem; border-radius: 0.25rem; } /* sky-100 border-sky-500 */
+        .exam-tip p { margin-bottom: 0.25rem; }
+        .details-content { display: none; margin-top: 0.75rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.375rem; } /* slate-50 */
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .content-section { padding-top: 4.5rem; margin-top: -4.5rem; } /* Offset for fixed navbar */
+        .clickable-item { cursor: pointer; padding: 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out; }
+        .clickable-item:hover { background-color: #e0f2fe; } /* sky-100 */
+        .clickable-item.active-item { background-color: #bae6fd; } /* sky-200 */
+        .code-snippet { background-color: #eef2ff; color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; } /* indigo-100, indigo-700 */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-sky-700">SnowPro Prep: Class 5</a>
+            <div class="space-x-1 sm:space-x-2 md:space-x-3 text-xs sm:text-sm md:text-base">
+                <a href="#semi-structured" class="nav-link text-slate-700">Semi-Struct</a>
+                <a href="#time-travel" class="nav-link text-slate-700">Time Travel</a>
+                <a href="#fail-safe" class="nav-link text-slate-700">Fail-safe</a>
+                <a href="#cloning" class="nav-link text-slate-700">Cloning</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8 pt-20">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-700">Semi-Structured Data, Time Travel & Fail-safe 📄⏳</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Guide for SnowPro Certification - Class 5</p>
+        </header>
+
+        <section id="introduction-class5" class="mb-12 card">
+             <h2 class="section-title">Welcome to Class 5!</h2>
+             <p class="mb-4 text-slate-700">This session delves into Snowflake's capabilities for handling diverse semi-structured data types and explores its powerful data protection features like Time Travel and Fail-safe. We'll also cover the efficiency of Zero-Copy Cloning.</p>
+             <p class="font-semibold text-slate-700">Today's Focus:</p>
+             <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600">
+                <li>Working with JSON, Avro, Parquet, XML: VARIANT, OBJECT, ARRAY data types, dot notation, FLATTEN function.</li>
+                <li>Time Travel: Configuration, use cases (querying past data, restoring objects).</li>
+                <li>Fail-safe: Purpose and recovery process (conceptual).</li>
+                <li>Cloning (Zero-Copy Cloning): Tables, schemas, databases – use cases and implications.</li>
+             </ul>
+             <p class="mt-4 font-semibold text-sky-600">Let's explore Snowflake's data flexibility and resilience!</p>
+        </section>
+
+        <section id="semi-structured" class="content-section mb-12">
+            <h2 class="section-title">Working with Semi-Structured Data</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake excels at storing and querying semi-structured data (JSON, Avro, Parquet, XML) natively using the VARIANT data type and related functions.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-semi-item="variant">
+                        <strong>VARIANT, OBJECT, ARRAY Data Types:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>VARIANT:</strong> A universal data type that can store values of any other type, including semi-structured data like JSON objects/arrays, up to 16MB compressed. Snowflake automatically optimizes storage and querying of VARIANT data.</p>
+                            <p><strong>OBJECT:</strong> Specifically for storing JSON objects (key-value pairs).</p>
+                            <p><strong>ARRAY:</strong> Specifically for storing JSON arrays.</p>
+                            <p>When loading semi-structured data, it's typically loaded into a single VARIANT column.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-semi-item="dot-notation">
+                        <strong>Dot Notation & Bracket Notation:</strong>
+                        <div class="details-content text-sm">
+                            <p>Used to traverse the hierarchical structure of semi-structured data within a VARIANT column.</p>
+                            <p><strong>Dot Notation:</strong> <code class="code-snippet">variant_col:key_name.subkey_name</code> (e.g., <code class="code-snippet">json_data:user.name</code>).</p>
+                            <p><strong>Bracket Notation:</strong> <code class="code-snippet">variant_col['key_name']['subkey_name']</code>. Also used for accessing array elements: <code class="code-snippet">variant_col:array_key[0]</code>.</p>
+                            <p>Path elements are case-sensitive by default unless explicitly cast or using case-insensitive functions.</p>
+                            <p>Type casting can be applied: <code class="code-snippet">json_data:user.id::NUMBER</code>.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-semi-item="flatten">
+                        <strong>FLATTEN Function:</strong>
+                        <div class="details-content text-sm">
+                            <p>A table function used to convert semi-structured data (especially arrays or nested objects) into a relational representation (rows and columns).</p>
+                            <p>It "explodes" array elements or object key-value pairs into separate rows.</p>
+                            <p><strong>Common Use Cases:</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Extracting all elements from an array within each row of a table.</li>
+                                <li>Turning key-value pairs of an object into rows.</li>
+                            </ul>
+                            <p>Syntax: <code class="code-snippet">LATERAL FLATTEN(INPUT => variant_col:array_path)</code> within a <code class="code-snippet">FROM</code> clause.</p>
+                        </div>
+                    </li>
+                </ul>
+                 <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand that VARIANT is the primary type for semi-structured data. Be comfortable with dot/bracket notation for accessing elements and know when and how to use FLATTEN for arrays/objects.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="time-travel" class="content-section mb-12">
+            <h2 class="section-title">Time Travel</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake Time Travel allows accessing historical data that has been changed or deleted at any point within a defined retention period.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-tt-item="config">
+                        <strong>Configuration:</strong>
+                        <div class="details-content text-sm">
+                            <p>Data retention period is set by the <code class="code-snippet">DATA_RETENTION_TIME_IN_DAYS</code> parameter.</p>
+                            <p>Can be set at the Account, Database, Schema, or Table level (objects inherit from their parent if not explicitly set).</p>
+                            <p><strong>Standard Edition:</strong> 0 or 1 day (default 1 day).</p>
+                            <p><strong>Enterprise Edition (and above):</strong> 0 to 90 days.</p>
+                            <p>Time Travel storage incurs costs.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-tt-item="usecases">
+                        <strong>Use Cases:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>1. Querying Past Data:</strong> Use the <code class="code-snippet">AT | BEFORE</code> clause in <code class="code-snippet">SELECT</code> statements to query data as it existed at a specific point in time.</p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><code class="code-snippet">TIMESTAMP => 'YYYY-MM-DD HH24:MI:SS'::TIMESTAMP_LTZ</code></li>
+                                <li><code class="code-snippet">OFFSET => -N</code> (N seconds ago)</li>
+                                <li><code class="code-snippet">STATEMENT => 'query_id'</code> (before a specific query ran)</li>
+                            </ul>
+                            <p>Example: <code class="code-snippet">SELECT * FROM my_table AT(TIMESTAMP => '2023-01-01 10:00:00');</code></p>
+                            <p><strong>2. Restoring Objects:</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><code class="code-snippet">UNDROP TABLE &lt;name&gt;</code>: Restores a dropped table.</li>
+                                <li><code class="code-snippet">UNDROP SCHEMA &lt;name&gt;</code>: Restores a dropped schema.</li>
+                                <li><code class="code-snippet">UNDROP DATABASE &lt;name&gt;</code>: Restores a dropped database.</li>
+                                <li>Cloning an object (table, schema, database) from a point in the past: <code class="code-snippet">CREATE TABLE restored_table CLONE my_table AT(OFFSET => -3600);</code></li>
+                            </ul>
+                            <p><strong>3. Backing up and Restoring Data:</strong> While not a traditional backup, Time Travel allows for quick recovery from accidental DML/DDL operations.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Know the difference in default and maximum retention periods between Standard and Enterprise editions. Be familiar with the <code class="code-snippet">AT | BEFORE</code> clause and the <code class="code-snippet">UNDROP</code> command.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="fail-safe" class="content-section mb-12">
+            <h2 class="section-title">Fail-safe</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Fail-safe provides a non-configurable 7-day period after Time Travel retention ends, during which historical data *may* be recoverable by Snowflake Support only in critical data loss scenarios.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item" data-fs-item="purpose">
+                        <strong>Purpose and Recovery Process (Conceptual):</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Purpose:</strong> A data recovery service of last resort for catastrophic data loss (e.g., accidental drop of account, major system failure).</p>
+                            <p><strong>Duration:</strong> Fixed 7-day period that begins *after* the Time Travel retention period for an object has ended.</p>
+                            <p><strong>Accessibility:</strong> Fail-safe data is NOT directly accessible by users via SQL or Time Travel queries. Recovery can only be initiated by Snowflake Support.</p>
+                            <p><strong>Cost:</strong> Storage for Fail-safe data incurs costs, similar to Time Travel storage.</p>
+                            <p><strong>Not for:</strong> Routine backups or undoing minor errors (Time Travel is for that).</p>
+                            <p>Transient and Temporary tables do NOT have a Fail-safe period.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand that Fail-safe is a Snowflake-managed recovery mechanism, not user-accessible. It's for disaster recovery, not regular data operations. Know it's a 7-day period after Time Travel.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cloning" class="content-section mb-12">
+            <h2 class="section-title">Cloning (Zero-Copy Cloning)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake's Zero-Copy Cloning creates a copy of a table, schema, or database almost instantly without duplicating the underlying storage, until changes are made to the clone or original.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-clone-item="howitworks">
+                        <strong>How it Works:</strong>
+                        <div class="details-content text-sm">
+                            <p>Cloning is primarily a metadata operation. When an object is cloned, Snowflake creates new metadata pointing to the existing micro-partitions of the original object.</p>
+                            <p>No physical data is copied at the time of cloning, making it extremely fast and storage-efficient initially.</p>
+                            <p>The clone and the original share the same underlying micro-partitions until one of them is modified. When changes occur, new micro-partitions are created for the modified object (copy-on-write).</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-clone-item="objects">
+                        <strong>Cloning Tables, Schemas, Databases:</strong>
+                        <div class="details-content text-sm">
+                            <p><code class="code-snippet">CREATE TABLE my_clone_table CLONE my_original_table;</code></p>
+                            <p><code class="code-snippet">CREATE SCHEMA my_clone_schema CLONE my_original_schema;</code></p>
+                            <p><code class="code-snippet">CREATE DATABASE my_clone_db CLONE my_original_db;</code></p>
+                            <p>Can also clone using Time Travel: <code class="code-snippet">CREATE TABLE ... CLONE ... AT(TIMESTAMP => ...);</code></p>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-clone-item="usecases">
+                        <strong>Use Cases:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Creating instant dev/test/QA environments with production data.</li>
+                                <li>Creating backups or snapshots of data at a specific point in time.</li>
+                                <li>Making data available for ad-hoc analysis or data science experiments without impacting production.</li>
+                                <li>Facilitating data sharing by providing a clone to a consumer (though Secure Data Sharing is often preferred for live sharing).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-clone-item="implications">
+                        <strong>Implications:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Speed:</strong> Cloning is nearly instantaneous.</p>
+                            <p><strong>Storage:</strong> Initially, no additional storage is consumed. Storage costs increase only as the clone and original diverge due to modifications.</p>
+                            <p><strong>Independence:</strong> Once created, the clone is an independent object. Changes to the original do not affect the clone, and vice-versa (after the point of cloning).</p>
+                            <p>Privileges on the original object are generally not copied to the clone by default (unless cloning a database, where child object privileges within the database are cloned).</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Zero-Copy Cloning is a key differentiator. Understand that it's a metadata operation and how storage is handled (shared initially, copy-on-write for changes). Know its common use cases, especially for dev/test environments.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 py-8 border-t border-slate-200">
+            <p class="text-slate-600">&copy; 2024 Your Name/Revature. Good luck with your SnowPro studies!</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Clickable items to show details
+            function setupClickableItems(containerSelector, itemSelector, detailsSelector) {
+                document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(item => {
+                    const details = item.querySelector(detailsSelector);
+                    if (details) {
+                        details.style.display = 'none'; // Initially hide
+                        item.addEventListener('click', (e) => {
+                            const currentActive = document.querySelector(`${containerSelector} ${itemSelector}.active-item`);
+                            if (currentActive && currentActive !== item) {
+                                currentActive.classList.remove('active-item');
+                                const currentDetails = currentActive.querySelector(detailsSelector);
+                                if (currentDetails) currentDetails.style.display = 'none';
+                            }
+                            
+                            const isHidden = details.style.display === 'none' || details.style.display === '';
+                            details.style.display = isHidden ? 'block' : 'none';
+                            if (isHidden) {
+                                item.classList.add('active-item');
+                            } else {
+                                item.classList.remove('active-item');
+                            }
+                        });
+                    }
+                });
+            }
+            // Apply to all sections that use this pattern
+            setupClickableItems('#semi-structured ul', '.clickable-item', '.details-content');
+            setupClickableItems('#time-travel ul', '.clickable-item', '.details-content');
+            setupClickableItems('#fail-safe ul', '.clickable-item', '.details-content');
+            setupClickableItems('#cloning ul', '.clickable-item', '.details-content');
+        });
+    </script>
+</body>
+</html>

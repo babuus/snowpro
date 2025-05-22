@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnowPro Cert Prep: Class 6 - Account Mgmt, Security & Exam Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices: 
+        - Resource Monitors: Goal: Explain setup. Method: Clickable item for setup/alerts. Lib: HTML/CSS/JS.
+        - User/Role Mgmt: Goal: Detail best practices. Method: Clickable item for best practices. Lib: HTML/CSS/JS.
+        - Auth Methods: Goal: Differentiate. Method: Clickable items for MFA, SSO. Lib: HTML/CSS/JS.
+        - Network Policies: Goal: Reinforce setup. Method: Clickable item for policy application. Lib: HTML/CSS/JS.
+        - Connectors: Goal: Overview. Method: Clickable item listing common connectors. Lib: HTML/CSS/JS.
+        - Exam Strategy: Goal: Provide tips. Method: Clickable items for logistics, key areas, Q&A prompt. Lib: HTML/CSS/JS.
+        - Footer: Static content.
+        - No charts needed; focus on interactive text. All AI features removed.
+    -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .section-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1.5rem; color: #0369a1; } /* sky-700 */
+        .subsection-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #075985; } /* sky-800 */
+        .card { background-color: white; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #0284c7; margin-bottom: 0.75rem; } /* sky-600 */
+        .exam-tip { background-color: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 1rem; margin-top: 1rem; border-radius: 0.25rem; } /* sky-100 border-sky-500 */
+        .exam-tip p { margin-bottom: 0.25rem; }
+        .details-content { display: none; margin-top: 0.75rem; padding: 1rem; background-color: #f8fafc; border-radius: 0.375rem; } /* slate-50 */
+        .nav-link { transition: color 0.3s; }
+        .nav-link:hover { color: #0ea5e9; } /* sky-500 */
+        .content-section { padding-top: 4.5rem; margin-top: -4.5rem; } /* Offset for fixed navbar */
+        .clickable-item { cursor: pointer; padding: 0.5rem; border-radius: 0.25rem; transition: background-color 0.2s ease-in-out; }
+        .clickable-item:hover { background-color: #e0f2fe; } /* sky-100 */
+        .clickable-item.active-item { background-color: #bae6fd; } /* sky-200 */
+        .code-snippet { background-color: #eef2ff; color: #4338ca; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace; font-size: 0.9em; } /* indigo-100, indigo-700 */
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-sky-700">SnowPro Prep: Class 6</a>
+            <div class="space-x-1 sm:space-x-2 md:space-x-3 text-xs sm:text-sm md:text-base">
+                <a href="#resource-monitors" class="nav-link text-slate-700">Monitors</a>
+                <a href="#user-role-mgmt" class="nav-link text-slate-700">User/Role</a>
+                <a href="#auth-methods" class="nav-link text-slate-700">Auth</a>
+                <a href="#network-policies-class6" class="nav-link text-slate-700">Network</a>
+                <a href="#connectors" class="nav-link text-slate-700">Connectors</a>
+                <a href="#exam-strategy" class="nav-link text-slate-700">Exam Tips</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8 pt-20">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-sky-700">Account Management, Security & Exam Strategy 🔑🎯</h1>
+            <p class="text-lg text-slate-600 mt-2">Interactive Guide for SnowPro Certification - Class 6</p>
+        </header>
+
+        <section id="introduction-class6" class="mb-12 card">
+             <h2 class="section-title">Welcome to Class 6 - The Final Stretch!</h2>
+             <p class="mb-4 text-slate-700">In our last session, we'll cover essential account management tasks, reinforce security best practices, discuss Snowflake's connector ecosystem, and most importantly, equip you with strategies for tackling the SnowPro Core Certification exam.</p>
+             <p class="font-semibold text-slate-700">Today's Focus:</p>
+             <ul class="list-disc list-inside ml-4 space-y-1 text-slate-600">
+                <li>Resource Monitors: Setup and alerts for credit control.</li>
+                <li>User & Role Management: Best practices.</li>
+                <li>Authentication Methods: MFA, Federated Authentication/SSO.</li>
+                <li>Network Policies.</li>
+                <li>Snowflake Connector Ecosystem.</li>
+                <li>Exam Logistics & Tips.</li>
+                <li>Open Q&A for any lingering doubts.</li>
+             </ul>
+             <p class="mt-4 font-semibold text-sky-600">Let's ensure you're fully prepared for exam success!</p>
+        </section>
+
+        <section id="resource-monitors" class="content-section mb-12">
+            <h2 class="section-title">Resource Monitors</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Resource monitors are crucial for controlling credit consumption by virtual warehouses and preventing unexpected costs.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item" data-rm-item="setup">
+                        <strong>Setup and Alerts:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Purpose:</strong> To track and control credit usage for warehouses assigned to the monitor.</p>
+                            <p><strong>Creation:</strong> <code class="code-snippet">CREATE RESOURCE MONITOR my_monitor WITH CREDIT_QUOTA = 1000 ...;</code></p>
+                            <p><strong>Key Properties:</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li><code class="code-snippet">CREDIT_QUOTA</code>: The total number of credits allowed for the monitor's interval.</li>
+                                <li><code class="code-snippet">FREQUENCY</code>: How often the credit usage resets (e.g., <code class="code-snippet">DAILY</code>, <code class="code-snippet">WEEKLY</code>, <code class="code-snippet">MONTHLY</code>, <code class="code-snippet">YEARLY</code>, <code class="code-snippet">NEVER</code>). If <code class="code-snippet">NEVER</code>, it doesn't reset.</li>
+                                <li><code class="code-snippet">START_TIMESTAMP</code>: When the monitor starts tracking.</li>
+                                <li><code class="code-snippet">TRIGGERS</code> (Actions): Define actions when credit usage reaches certain percentages of the quota.
+                                    <ul class="list-circle list-inside ml-4">
+                                        <li><code class="code-snippet">ON &lt;percentage&gt; PERCENT DO NOTIFY</code>: Send an alert notification (to account admins by default, can specify users).</li>
+                                        <li><code class="code-snippet">ON &lt;percentage&gt; PERCENT DO SUSPEND</code>: Suspend all assigned warehouses.</li>
+                                        <li><code class="code-snippet">ON &lt;percentage&gt; PERCENT DO SUSPEND_IMMEDIATE</code>: Suspend all assigned warehouses immediately, aborting running queries.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <p><strong>Assignment:</strong> A resource monitor can be assigned at the Account level (all warehouses) or to specific warehouses.</p>
+                            <p>A warehouse can only be assigned to one resource monitor. If assigned at account and warehouse level, the warehouse-level monitor takes precedence.</p>
+                        </div>
+                    </li>
+                </ul>
+                 <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand how credit quotas, frequency, and trigger actions (notify, suspend, suspend_immediate) work. Know the precedence if monitors are set at both account and warehouse levels.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="user-role-mgmt" class="content-section mb-12">
+            <h2 class="section-title">User & Role Management</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Effective user and role management is key to maintaining a secure and organized Snowflake environment, adhering to the principle of least privilege.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item" data-urm-item="bestpractices">
+                        <strong>Best Practices:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Principle of Least Privilege:</strong> Grant roles only the permissions necessary for their tasks.</li>
+                                <li><strong>Custom Roles:</strong> Create custom roles for specific job functions or access patterns rather than overusing system-defined roles like <code class="code-snippet">SYSADMIN</code> or <code class="code-snippet">ACCOUNTADMIN</code>.</li>
+                                <li><strong>Role Hierarchy:</strong> Design a logical role hierarchy. Grant privileges to functional roles, and then grant these functional roles to "access roles" or directly to users.</li>
+                                <li><strong>Ownership Management:</strong> Plan object ownership. Typically, functional roles (e.g., <code class="code-snippet">ETL_ROLE</code>, <code class="code-snippet">ANALYST_ROLE</code>) should own objects they manage, not individual users.</li>
+                                <li><strong>Future Grants:</strong> Utilize future grants to simplify privilege management for newly created objects.</li>
+                                <li><strong>Regular Audits:</strong> Periodically review user access and role privileges.</li>
+                                <li><strong>Separation of Duties:</strong> Use different roles for different administrative tasks (e.g., <code class="code-snippet">SECURITYADMIN</code> for security policies, <code class="code-snippet">USERADMIN</code> for user/role creation).</li>
+                                <li><strong>Service Accounts:</strong> For applications or automated processes, create dedicated users with specific roles and minimal privileges.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>The principle of least privilege is a core concept. Understand how role hierarchies and custom roles contribute to better security and manageability.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="auth-methods" class="content-section mb-12">
+            <h2 class="section-title">Authentication Methods</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake supports multiple authentication methods to enhance security and integrate with existing identity providers.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-auth-item="mfa">
+                        <strong>Multi-Factor Authentication (MFA):</strong>
+                        <div class="details-content text-sm">
+                            <p>Adds an extra layer of security beyond username/password.</p>
+                            <p>Users enroll an MFA device (e.g., authenticator app like Duo Mobile, Google Authenticator).</p>
+                            <p>Can be enabled by users themselves or enforced by an administrator at the account or user level using <code class="code-snippet">ALTER ACCOUNT SET ENFORCE_MFA = TRUE;</code> or <code class="code-snippet">ALTER USER ... SET ENFORCE_MFA = TRUE;</code>.</p>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-auth-item="sso">
+                        <strong>Federated Authentication / Single Sign-On (SSO):</strong>
+                        <div class="details-content text-sm">
+                            <p>Allows users to authenticate to Snowflake using their corporate credentials managed by an external Identity Provider (IdP) like Okta, Azure AD, ADFS.</p>
+                            <p><strong>Mechanism:</strong> Uses SAML 2.0 standard.</p>
+                            <p><strong>Setup:</strong> Involves configuring both Snowflake (as a Service Provider) and the IdP. Snowflake provides IdP metadata and requires SP metadata from the IdP.</p>
+                            <p><strong>Key Parameters in Snowflake:</strong> <code class="code-snippet">sso_login_page</code> (URL of IdP login page), <code class="code-snippet">certificate</code> (IdP's signing certificate).</p>
+                            <p>Can be combined with MFA enforced at the IdP level.</p>
+                        </div>
+                    </li>
+                     <li class="clickable-item border-t pt-2 mt-2" data-auth-item="keypair">
+                        <strong>Key Pair Authentication:</strong>
+                        <div class="details-content text-sm">
+                            <p>More secure than basic password authentication, especially for programmatic access (e.g., connectors, drivers).</p>
+                            <p>Involves generating a public-private key pair. The public key is assigned to the Snowflake user. The client uses the private key to sign connection requests.</p>
+                            <p>Private key can be encrypted with a passphrase for additional security.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Understand the purpose of MFA and SSO. Know that SSO uses SAML 2.0 and requires configuration with an external IdP. Key pair authentication is a strong option for programmatic access.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="network-policies-class6" class="content-section mb-12">
+            <h2 class="section-title">Network Policies (Revisited)</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Network policies, as covered in data governance, are also a key administrative security tool to restrict access to your Snowflake account based on IP addresses.</p>
+                 <ul class="space-y-2">
+                    <li class="clickable-item" data-np-item="adminfocus">
+                        <strong>Administrative Focus:</strong>
+                        <div class="details-content text-sm">
+                            <p><strong>Creation:</strong> <code class="code-snippet">CREATE NETWORK POLICY my_corp_policy ALLOWED_IP_LIST = ('1.2.3.4/32', '10.0.0.0/8') BLOCKED_IP_LIST = ('5.6.7.8/32');</code></p>
+                            <p><strong>Activation:</strong> A network policy must be activated at the account level or for specific users to take effect.</p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Account Level: <code class="code-snippet">ALTER ACCOUNT SET NETWORK_POLICY = my_corp_policy;</code></li>
+                                <li>User Level: <code class="code-snippet">ALTER USER jdoe SET NETWORK_POLICY = my_corp_policy;</code></li>
+                            </ul>
+                            <p><strong>Best Practice:</strong> Always include your current IP address or a known safe range in the <code class="code-snippet">ALLOWED_IP_LIST</code> before activating a restrictive policy to avoid locking yourself out. Test thoroughly.</p>
+                            <p>Multiple network policies can exist, but only one can be active for the account and one for any given user at a time. User-level policies override account-level policies.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Remember that network policies need to be created AND activated. Understand the precedence (user > account). Be cautious when setting them up to avoid lockouts.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="connectors" class="content-section mb-12">
+            <h2 class="section-title">Snowflake Connector Ecosystem</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Snowflake provides a rich ecosystem of connectors and drivers to integrate with various tools, programming languages, and platforms.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item" data-conn-item="overview">
+                        <strong>Overview of Common Connectors/Drivers:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Python Connector:</strong> Allows Python applications to connect to and interact with Snowflake. Supports DB API v2.0.</li>
+                                <li><strong>Spark Connector:</strong> Enables Apache Spark to read data from and write data to Snowflake, leveraging Spark's distributed processing capabilities.</li>
+                                <li><strong>JDBC Driver:</strong> Java Database Connectivity driver for Java-based applications. Type 4 driver.</li>
+                                <li><strong>ODBC Driver:</strong> Open Database Connectivity driver for applications that use ODBC (e.g., many BI tools, scripting languages).</li>
+                                <li><strong>Node.js Driver:</strong> For JavaScript applications running on Node.js.</li>
+                                <li><strong>Go Driver:</strong> For applications written in Go.</li>
+                                <li><strong>.NET Driver:</strong> For applications developed on the .NET framework.</li>
+                                <li><strong>Kafka Connector:</strong> For streaming data from Apache Kafka into Snowflake (uses Snowpipe Streaming).</li>
+                            </ul>
+                            <p>These connectors handle authentication, session management, query execution, and result fetching.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="exam-tip">
+                    <p class="font-semibold">Exam Tip:</p>
+                    <p>Be aware of the existence of these common connectors (Python, Spark, JDBC/ODBC, Kafka are frequently mentioned). You don't need deep programming knowledge for each, but understand their purpose.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="exam-strategy" class="content-section mb-12">
+            <h2 class="section-title">Exam Logistics & Tips</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-700">Final preparation and strategies for tackling the SnowPro Core Certification exam.</p>
+                <ul class="space-y-2">
+                    <li class="clickable-item border-b pb-2" data-exam-item="logistics">
+                        <strong>Exam Logistics:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li><strong>Format:</strong> Multiple choice, multiple select questions.</li>
+                                <li><strong>Number of Questions:</strong> Typically around 100 questions.</li>
+                                <li><strong>Duration:</strong> Usually 115 minutes (check official guide for current specifics).</li>
+                                <li><strong>Passing Score:</strong> Scaled score, typically 750 out of 1000 (confirm with official guide).</li>
+                                <li><strong>Delivery:</strong> Online proctored or at a testing center.</li>
+                                <li><strong>Review Official Study Guide:</strong> The Snowflake SnowPro Core Certification Study Guide is your primary resource for domain weightings and topics.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-exam-item="timemgmt">
+                        <strong>Time Management:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Allocate roughly 1 minute per question. Some will be faster, some slower.</li>
+                                <li>If stuck on a question, mark it for review and move on. Don't spend too much time on a single question early on.</li>
+                                <li>Ensure you answer every question, even if it's a guess (no penalty for incorrect answers, only points for correct ones).</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item border-b pb-2" data-exam-item="keyareas">
+                        <strong>Key Areas to Re-review:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Snowflake Architecture (Storage, Compute, Cloud Services).</li>
+                                <li>Virtual Warehouse concepts (sizing, scaling, concurrency, credits).</li>
+                                <li>Data Loading (COPY command options, Snowpipe, file formats).</li>
+                                <li>Semi-structured data handling (VARIANT, FLATTEN).</li>
+                                <li>Time Travel and Cloning.</li>
+                                <li>Secure Data Sharing concepts.</li>
+                                <li>RBAC and Security features (Masking, Row Access Policies).</li>
+                                <li>Account Usage views and Information Schema.</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="clickable-item" data-exam-item="practice">
+                        <strong>Practice Question Sources:</strong>
+                        <div class="details-content text-sm">
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Official Snowflake sample questions (if available).</li>
+                                <li>Reputable third-party practice exams (e.g., Udemy, Whizlabs - verify quality).</li>
+                                <li>Review questions from your course materials and these interactive guides.</li>
+                                <li>Focus on understanding *why* an answer is correct, not just memorizing.</li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="open-qa" class="content-section mb-12">
+            <h2 class="section-title">Open Q&A</h2>
+            <div class="card">
+                <p class="text-slate-700">This is your opportunity to ask any lingering questions you might have about any topic covered in this course or about the SnowPro Core exam itself. No question is too small!</p>
+                <p class="mt-4 font-semibold text-sky-600">Let's ensure all your doubts are cleared before you take the exam!</p>
+            </div>
+        </section>
+
+
+        <footer class="text-center mt-12 py-8 border-t border-slate-200">
+            <p class="text-slate-600">&copy; 2025 Babu/Revature. Best of luck on your SnowPro Core Certification Exam!</p>
+        </footer>
+
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for nav links
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Clickable items to show details
+            function setupClickableItems(containerSelector, itemSelector, detailsSelector) {
+                document.querySelectorAll(`${containerSelector} ${itemSelector}`).forEach(item => {
+                    const details = item.querySelector(detailsSelector);
+                    if (details) {
+                        details.style.display = 'none'; // Initially hide
+                        item.addEventListener('click', (e) => {
+                            const currentActive = document.querySelector(`${containerSelector} ${itemSelector}.active-item`);
+                            if (currentActive && currentActive !== item) {
+                                currentActive.classList.remove('active-item');
+                                const currentDetails = currentActive.querySelector(detailsSelector);
+                                if (currentDetails) currentDetails.style.display = 'none';
+                            }
+                            
+                            const isHidden = details.style.display === 'none' || details.style.display === '';
+                            details.style.display = isHidden ? 'block' : 'none';
+                            if (isHidden) {
+                                item.classList.add('active-item');
+                            } else {
+                                item.classList.remove('active-item');
+                            }
+                        });
+                    }
+                });
+            }
+            // Apply to all sections that use this pattern
+            setupClickableItems('#resource-monitors ul', '.clickable-item', '.details-content');
+            setupClickableItems('#user-role-mgmt ul', '.clickable-item', '.details-content');
+            setupClickableItems('#auth-methods ul', '.clickable-item', '.details-content');
+            setupClickableItems('#network-policies-class6 ul', '.clickable-item', '.details-content');
+            setupClickableItems('#connectors ul', '.clickable-item', '.details-content');
+            setupClickableItems('#exam-strategy ul', '.clickable-item', '.details-content');
+        });
+    </script>
+</body>
+</html>
